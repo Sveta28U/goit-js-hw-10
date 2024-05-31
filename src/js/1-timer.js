@@ -24,13 +24,23 @@ const options = {
 };
 flatpickr(input, options);
 function onStartBtnClick() {
-  const currentDate = Date.now();
-  const diff = userSelectedDate - currentDate;
-  const { days, hours, minutes, seconds } = convertMs(diff);
-  timer.querySelector('[data-days]').textContent = days;
-  timer.querySelector('[data-hours]').textContent = hours;
-  timer.querySelector('[data-minutes]').textContent = minutes;
-  timer.querySelector('[data-seconds]').textContent = seconds;
+  btn.disabled = true;
+  input.disabled = true;
+  const intervalId = setInterval(() => {
+    const currentDate = Date.now();
+    const diff = userSelectedDate - currentDate;
+    if (diff <= 1000) {
+      clearInterval(intervalId);
+    }
+    const { days, hours, minutes, seconds } = convertMs(diff);
+    timer.querySelector('[data-days]').textContent = addZero(days);
+    timer.querySelector('[data-hours]').textContent = addZero(hours);
+    timer.querySelector('[data-minutes]').textContent = addZero(minutes);
+    timer.querySelector('[data-seconds]').textContent = addZero(seconds);
+  }, 1000);
+}
+function addZero(value) {
+  return String(value).padStart(2, '0');
 }
 function convertMs(ms) {
   // Number of milliseconds per unit of time
